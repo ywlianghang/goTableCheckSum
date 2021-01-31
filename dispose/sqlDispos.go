@@ -72,7 +72,8 @@ func ChunkPoint(table *TableInfo,chunk *ChunkInfo) bool{  //对所有chunk的开
    var status bool = true
    var indexQue []byte
    indexQue = append(indexQue,table.FirstIndexPoint...)
-   for i:=1;i< chunk.JobNums;i++ {
+   if chunk.Count > chunk.ChunkSize {
+      for i:=1;i< chunk.JobNums;i++ {
 	   a, _ := strconv.Atoi(table.FirstIndexPoint)
 	   if chunk.ChunkSize+a > chunk.Count {
 		   chunk.ChunkSize = chunk.Count - a
@@ -101,7 +102,11 @@ func ChunkPoint(table *TableInfo,chunk *ChunkInfo) bool{  //对所有chunk的开
 		   indexQue = append(indexQue,","...)
 		   indexQue = append(indexQue,[]byte(c[0])...)
 	   }
-   }
+       }
+   }else {
+           indexQue = append(indexQue,"-"...)
+	   indexQue = append(indexQue,strconv.Itoa(chunk.ChunkSize)...)
+      }
 	chunk.ChunkIndexQue = indexQue
     return status
 }
