@@ -8,21 +8,21 @@
     完成后如何确定源目端数据是否一致，在迁移过程中是否有数据遗漏或数据异常。于是萌发了自己使用go写一个
     离线数据校验工具的想法。
     
-    1）测试pt-table-checksum的缺陷如下：
-    （1）pt-table-checksum数据校验使用数据库的CRC32进行校验，针对表中两个列名及数据相同但顺序不同，无法检测出来
-    （2）pt-table-checksum依赖主从关系，非主从关系的数据库无法检测
-    （3）pt-table-checksum是基于binlog把在主库进行的检查动作，在从库重放一遍
-    （4）pt-table-checksum需要安装依赖包，针对平台有限制
+    1）测试 pt-table-checksum 的缺陷如下：
+    （1）pt-table-checksum 数据校验使用数据库的CRC32进行校验，针对表中两个列名及数据相同但顺序不同，无法检测出来
+    （2）pt-table-checksum 依赖主从关系，非主从关系的数据库无法检测
+    （3）pt-table-checksum 是基于binlog把在主库进行的检查动作，在从库重放一遍
+    （4）pt-table-checksum 需要安装依赖包，针对平台有限制
      
-    2）goTableCheckSum针对pt-table-checksum的缺陷改造：
-    （1）goTableCheckSum数据校验是有程序进行校验，可以使用CRC32、MD5、SHA1算法进行对数据校验，将数据使用字节流的形式查询校验，规避上述问题
-    （2）goTableCheckSum对源目端数据库只会执行select查询数据操作，对源目端的数据库产生的压力较小
-    （3）goTableCheckSum支持针对指定的单表或多表进行数据校验、可以指定忽略校验的表
-    （4）goTableCheckSum支持指定where条件的数据校验查询，但仅限于单表
-    （5）goTableCheckSum支持自定义每次检验数据库的chunk大小。即每次校验多少条行数
-    （6）goTableCheckSum支持自定义修复语句的执行方式，是写在文件中还是直接在表中执行
+    2）goTableCheckSum 针对 pt-table-checksum 的缺陷改造：
+    （1）goTableCheckSum 数据校验是有程序进行校验，可以使用CRC32、MD5、SHA1算法进行对数据校验，将数据使用字节流的形式查询校验，规避上述问题
+    （2）goTableCheckSum 对源目端数据库只会执行select查询数据操作，对源目端的数据库产生的压力较小
+    （3）goTableCheckSum 支持针对指定的单表或多表进行数据校验、可以指定忽略校验的表
+    （4）goTableCheckSum 支持指定where条件的数据校验查询，但仅限于单表
+    （5）goTableCheckSum 支持自定义每次检验数据库的chunk大小。即每次校验多少条行数
+    （6）goTableCheckSum 支持自定义修复语句的执行方式，是写在文件中还是直接在表中执行
 
-    3）goTableCheckSum后续功能更新
+    3）goTableCheckSum 后续功能更新
     （1）针对数据校验增加并发操作，降低数据校验时长
     （2）增加单表的自定义列数据校验
     （3）增加针对源库数据库压力的监控，当压力高时自动减少并发及chunk数据量，或暂停校验
