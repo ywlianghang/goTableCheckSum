@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
-	"goProject/GoTableCheckSum/checksum"
+	"goProject/checksum"
 	"log"
 	"strconv"
 	"strings"

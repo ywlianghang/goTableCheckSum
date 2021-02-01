@@ -3,7 +3,7 @@ package dispose
 import (
 	"database/sql"
 	"fmt"
-	"goProject/GoTableCheckSum/checksum"
+	"goProject/checksum"
 )
 
 func ColumnsNum(DB *sql.DB,database string,table string) ([]byte,bool){  //获取每个表的列信息

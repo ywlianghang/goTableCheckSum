@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
-	"goProject/GoTableCheckSum/CURD"
-	"goProject/GoTableCheckSum/dispose"
-	"goProject/GoTableCheckSum/flag"
+	"goProject/dispose"
+	"goProject/flag"
+    "goProject/CURD"
 	"os"
 	"strconv"
 	"strings"

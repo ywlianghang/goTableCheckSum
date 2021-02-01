@@ -6,7 +6,7 @@ import (
 	"database/sql"
 	"encoding/hex"
 	"fmt"
-	"goProject/GoTableCheckSum/CURD"
+	"goProject/CURD"
 	"hash/crc32"
 	"strings"
 )
