@@ -55,6 +55,8 @@
             --character value, --charset value  connection database character. For example: --charset=utf8 (default: "utf8")
             --chunkSize value, --chunk value    How many rows of data are checked at a time. For example: --chunk=1000 or --chunk 1000 (default: "10000")
             --datafix value                     Fix SQL written to a file or executed directly. For example: --datafix=file or --datafix file (default: "file")
+            --checksum value, --cks value       Specifies algorithms for source and target-side data validation.values are CRC32 MD5 SHA1. For example: --checksum=CRC32 or --checksum MD5 or --checksum=HASH1 (default: "CRC32")
+            --where value                       The WHERE condition is used for data validation under a single table. For example: --where "1=1" or --where "id >=10" (default: "NULL")
             --help, -h                          show help
             --version, -v                       print the version
 
