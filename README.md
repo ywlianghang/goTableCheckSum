@@ -113,7 +113,7 @@
 
     goTableChecksum needs go version > 1.12 for go mod
      
-    shell> git clone https://github.com/silenceshell/hcache.git
+    shell> git clone https://github.com/ywlianghang/goTableCheckSum.git
     shell> cd main
     shell> go build -o goTableChecksum main.go
     shell> chmod +x goTableChecksum
