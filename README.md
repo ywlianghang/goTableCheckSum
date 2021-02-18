@@ -79,7 +79,7 @@
      
      2）检测单库pcms下所有表的数据是否相同，不同则产生修复SQL，并直接在目标库中执行
      shell> ./goTableCheckSum -s host=172.16.50.161,user=pcms,password=pcms@123,P=3306 -d 
-     host=172.16.50.162,user=pcms,password=pcms@123,P=3306 -D pcms -t gobench1 -datafix table
+     host=172.16.50.162,user=pcms,password=pcms@123,P=3306 -D pcms  -datafix table
 
      -- database pcms  initialization completes,begin initialization table -- 
      -- Start initial database pcms table gobench1 -- 
