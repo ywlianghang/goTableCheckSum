@@ -21,7 +21,7 @@
     （4）goTableCheckSum 支持指定where条件的数据校验查询，但仅限于单表
     （5）goTableCheckSum 支持自定义每次检验数据库的chunk大小。即每次校验多少条行数
     （6）goTableCheckSum 支持自定义修复语句的执行方式，是写在文件中还是直接在表中执行
-    （7）goTableCheckSum 支持针对单表的where条件的数据校验支持
+    （7）goTableCheckSum 支持针对单表的where条件的数据校验
     （8）goTableCheckSum 支持指定检验数据算法CRC32、MD5、HASH1
 
     3）goTableCheckSum 后续功能更新
