@@ -1,4 +1,4 @@
-package dispose
+package checksum
 
 import (
 	"bufio"
