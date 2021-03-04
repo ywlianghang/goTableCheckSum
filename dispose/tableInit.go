@@ -31,6 +31,9 @@ func TableInitCheck(table *TableInfo,chunk *ChunkInfo) bool{ //初始化表数�
 
 func ConnInitCheck(o *flag.ConnParameter){ //传参初始化
 	flag.ParameterLimits(o)
+	if !o.HelpStatus {
+		return
+	}
 	DSNconn(o) //获取源目端*sql.db
 	for k, v := range o.Dbdirct {
 		if strings.Index(k, "oracle") != -1 {
@@ -131,8 +134,8 @@ func TableCheckActive(){
 				ChunkSize:       cc,
 				ChunkSizeStauts: true,
 			}
-			//sqlFile := "/tmp/"+ a["database"] + "_" + tableList[i] + ".sql"
-			sqlFile := "D:\\" + p.Database + "_" + p.TableList[i] + ".sql"
+			sqlFile := "/tmp/"+ p.Database + "_" + p.TableList[i] + ".sql"
+			//sqlFile := "C:\\" + p.Database + "_" + p.TableList[i] + ".sql"
 			_, err := os.Stat(sqlFile)
 			if err == nil {
 				os.Remove(sqlFile)

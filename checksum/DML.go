@@ -60,8 +60,8 @@ func DestDelete(dbname string,tablename string,columnInfo []string,strsql []stri
 
 }
 func SqlFile(dbname string,tablename string,sql []string){  //在/tmp/下创建数据修复文件，将在目标端数据修复的语句写入到文件中
-	//sqlFile := "/tmp/"+ dbname + "_" + tablename + ".sql"
-	sqlFile := "D:\\"+ dbname + "_" + tablename + ".sql"
+	sqlFile := "/tmp/"+ dbname + "_" + tablename + ".sql"
+	//sqlFile := "C:\\"+ dbname + "_" + tablename + ".sql"
 	sfile,err := os.Open(sqlFile)
 	if err != nil && os.IsNotExist(err){
 		sfile,err = os.OpenFile(sqlFile,os.O_WRONLY|os.O_CREATE,0666)

@@ -128,18 +128,19 @@ func ChunkValidation (DB *sql.DB,dbname string,tablename string,column []string,
 		sql := DestDelete(dbname,tablename,column,bb)
 		if DataFix =="file"{
 			fmt.Printf("Start the repair Delete SQL and write the repair SQL to /tmp/%s_%s.sql\n",dbname,tablename)
+			//fmt.Printf("Start the repair Delete SQL and write the repair SQL to C:\\%s_%s.sql\n",dbname,tablename)
 			SqlFile(dbname,tablename,sql)
 		}else if DataFix =="table"{
 			fmt.Printf("Start executing Delete SQL statements in the target databases %s\n",dbname)
 			SqlExec(DB,sql)
 		}
 	}
-	//fmt.Println("aa")
-	//fmt.Println(aa)
+
 	if aa != nil {
 		sql := DestInsert(dbname,tablename,column,aa)
 		if DataFix =="file"{
 			fmt.Printf("Start the repair Insert SQL and write the repair SQL to /tmp/%s_%s.sql\n",dbname,tablename)
+			//fmt.Printf("Start the repair Insert SQL and write the repair SQL to C:\\%s_%s.sql\n",dbname,tablename)
 			SqlFile(dbname,tablename,sql)
 		}else if DataFix =="table"{
 			fmt.Printf("Start executing Insert SQL statements in the target databases %s\n",dbname)

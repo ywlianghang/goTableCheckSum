@@ -15,7 +15,7 @@ type ConnParameter struct {
 	SdatabaseType,DdatabaseType string
 	TableList []string
 	Sdb,Ddb *sql.DB
-	CheckTableStatus bool
+	CheckTableStatus,HelpStatus bool
 }
 
 func CliHelp(q *ConnParameter){
@@ -102,11 +102,22 @@ func CliHelp(q *ConnParameter){
 	}
 	app.Action = func(c *cli.Context) { //应用执行函数
 	}
-	q.CheckTableStatus = true
 	app.Run(os.Args)
+	q.CheckTableStatus = true
+	q.HelpStatus = true
+	aa := os.Args
+    for i:= range aa{
+    	if aa[i] == "--help" || aa[i] == "-h"{
+            q.HelpStatus = false
+		}
+	}
+
 }
 func ParameterLimits(q *ConnParameter) {
 	CliHelp(q)
+	if !q.HelpStatus {
+		return
+	}
 	q.Dbdirct = make(map[string]*sql.DB)
 	var parametersList string = "crc32,md5,sha1,table,file,mm,om,mo"
 	if strings.Index(parametersList,strings.ToLower(q.FrameworkCode)) == -1  {
