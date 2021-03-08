@@ -305,6 +305,7 @@ func SwhereDataCheck(DB *sql.DB, table *TableInfo,Whereconditions string) ([]str
 	var result []byte
 	var stmt *sql.Stmt
 	var err error
+
 	//源端数据源为oracle
 	if table.SdatabaseType == "oracle" {
 		f := OracDateTypeDispose("oracle",DB,table.DBname,table.Tablename)
@@ -319,7 +320,7 @@ func SwhereDataCheck(DB *sql.DB, table *TableInfo,Whereconditions string) ([]str
 	//源端数据源为MySQL
 	if table.SdatabaseType == "mysql" {
 		f := OracDateTypeDispose("mysql",DB,table.DBname,table.Tablename)
-		strSql := "SELECT /*!40001 SQL_NO_CACHE */ "+ f +" FROM `" + table.DBname + "`.`" + table.Tablename + "` FORCE INDEX(`PRIMARY`) WHERE " + table.PRIcolumn + ">= ? and " + table.PRIcolumn + " <=  ?;"
+		strSql := "SELECT /*!40001 SQL_NO_CACHE */ "+ f +" FROM `" + table.DBname + "`.`" + table.Tablename + "` where "+ Whereconditions
 		stmt,err = DB.Prepare(strSql)
 		if err != nil {
 			log.Fatal("[error]: Failed to query date from Source MySQL database. Please check current database status！", err)
@@ -351,7 +352,6 @@ func DwhereDataCheck(DB *sql.DB, table *TableInfo,Whereconditions string) ([]str
 	if table.DdatabaseType == "mysql" {
 		f := OracDateTypeDispose("mysql",DB,table.DBname,table.Tablename)
 		strSql := "SELECT /*!40001 SQL_NO_CACHE */ "+ f +" FROM `" + table.DBname + "`.`" + table.Tablename + "` where "+ Whereconditions
-
 		stmt,err = DB.Prepare(strSql)
 		if err != nil {
 			log.Fatal("[error]: Failed to query date from Dest MySQL database. Please check current database status！", err)

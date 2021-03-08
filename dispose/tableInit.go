@@ -66,7 +66,7 @@ func ConnInitCheck(o *flag.ConnParameter){ //传参初始化
 	} else {
 		table := strings.Split(o.Tablename, ",")
 		for i := range table {
-			o.TableList = append(o.TableList, table[i])
+			o.TableList = append(o.TableList, strings.ToUpper(table[i]))
 		}
 	}
 
@@ -89,6 +89,8 @@ func ConnInitCheck(o *flag.ConnParameter){ //传参初始化
 		}
 		o.TableList = aa
 	}
+
+
 	fmt.Printf(" -- database %s  initialization completes,begin initialization table -- \n", o.Database)
 	//针对要校验的表进行与检查，检查是否有主键，是否有数据（空表）
 	for i := range o.TableList { //表预检测

@@ -122,6 +122,7 @@ func ParameterLimits(q *ConnParameter) {
 	var parametersList string = "crc32,md5,sha1,table,file,mm,om,mo"
 	if strings.Index(parametersList,strings.ToLower(q.FrameworkCode)) == -1  {
 		fmt.Println("Incorrect frameworkCode input parameters, please use --help to see the relevant parameters")
+		q.HelpStatus = false
 		return
 	}
 
@@ -143,6 +144,7 @@ func ParameterLimits(q *ConnParameter) {
 		}
 	}else {
 		fmt.Println("Incorrect source database connection input parameters, please use --help to see the relevant parameters")
+		q.HelpStatus = false
 		return
 	}
 
@@ -164,29 +166,39 @@ func ParameterLimits(q *ConnParameter) {
 		}
 	}else{
 		fmt.Println("Incorrect dest database connection input parameters, please use --help to see the relevant parameters")
+		q.HelpStatus = false
 		return
 	}
 	if q.Database == "NULL"{
 		fmt.Println("Incorrect database name input parameters, please use --help to see the relevant parameters")
+		q.HelpStatus = false
 		return
 	}
 	if q.Shost == q.Dhost && q.Sport == q.Dport{
 		fmt.Println("Incorrect Same source end connection address (host and port) input parameters, please use --help to see the relevant parameters")
+		q.HelpStatus = false
 		return
 	}
 	if strings.Index(parametersList,strings.ToLower(q.CheckSum)) == -1 {
 		fmt.Println("Incorrect CheckSum algorithm input parameters, please use --help to see the relevant parameters")
+		q.HelpStatus = false
 		return
 	}
 	if strings.Index(parametersList,strings.ToLower(q.Datafix)) == -1  {
 		fmt.Println("Incorrect datafix input parameters, please use --help to see the relevant parameters")
+		q.HelpStatus = false
 		return
 	}
 
 	//支持单表下使用where条件进行数据过滤校验
 	if q.Where != "NULL" { //限制使用where条件的表数量，默认支持单表，多表直接退出
-		if len(q.TableList) > 1 {
+		if q.Tablename == "ALL"{
 			fmt.Printf("[error]: Use the WHERE function to specify more than just a single table\n")
+			q.HelpStatus = false
+			return
+		}else if len(strings.Split(q.Tablename,",")) >1 {
+			fmt.Printf("[error]: Use the WHERE function to specify more than just a single table\n")
+			q.HelpStatus = false
 			return
 		}
 	}
