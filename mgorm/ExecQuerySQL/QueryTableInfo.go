@@ -5,7 +5,10 @@ import (
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/godror/godror"
+<<<<<<< HEAD
 	"log"
+=======
+>>>>>>> ce765399f3d2115cfbd3137bdf1c015bc310c867
 	"os"
 	"strings"
 	"time"
@@ -18,12 +21,16 @@ type Connection struct {
 }
 
 type SummaryInfo struct{
+<<<<<<< HEAD
 	Database,Tablename,StrSql,IgnoreTable string
 	RowCount,ChunkSize,JobNums,TableRows int
 	TableIndexQue []byte
 	ColumnPRI,TableFirstIndexVal string
 	MySQLSelectColumn,OracleSelectColumn string
 	TableList []string
+=======
+	Database,Tablename,StrSql string
+>>>>>>> ce765399f3d2115cfbd3137bdf1c015bc310c867
 }
 
 type DB interface {
@@ -34,10 +41,14 @@ type SqlExec interface {
 	DB
 	SQLColumnsNum(o *SummaryInfo) ([]byte,[]byte)
 	SQLTableNum(o *SummaryInfo) ([]byte,bool)
+<<<<<<< HEAD
 	SQLTablePRIColumn(strSql string,o *SummaryInfo) string
 	SQLTableRows(strSql string,o *SummaryInfo) int
 	SQLTablePoint(strSql string,o *SummaryInfo) []string
 	SQLTableCheckSum(strSql string,o *SummaryInfo) ([]string, []byte)
+=======
+	SQLTablePRIColumn(o *SummaryInfo) (string,bool)
+>>>>>>> ce765399f3d2115cfbd3137bdf1c015bc310c867
 }
 
 
@@ -55,11 +66,16 @@ func (con *Connection) GetConnection() *sql.DB {
 	return db
 }
 
+<<<<<<< HEAD
 func (con *Connection) SQLColumnsNum(strSql string,o *SummaryInfo) ([]byte,[]byte){ //获取每个表的列信息
+=======
+func (con *Connection) SQLColumnsNum(o *SummaryInfo) ([]byte,[]byte){ //获取每个表的列信息
+>>>>>>> ce765399f3d2115cfbd3137bdf1c015bc310c867
 	var columnsList []byte
 	var columnsInfo []byte
 	dbconn:=con.GetConnection()
 	defer dbconn.Close()
+<<<<<<< HEAD
 	stmt,err := dbconn.Prepare(strSql)
 	rows,err := stmt.Query()
 	if err != nil {
@@ -68,14 +84,26 @@ func (con *Connection) SQLColumnsNum(strSql string,o *SummaryInfo) ([]byte,[]byt
 	}
 	columnsList = append(columnsList,o.Tablename...)
 	columnsList = append(columnsList,":"...)
+=======
+
+	stmt,err := dbconn.Prepare(o.StrSql)
+	rows,err := stmt.Query()
+	if err != nil {
+		fmt.Printf("Failed to get column information for the current table %s under the databases %s !The information is as follows:%s\n",err)
+		os.Exit(1)
+	}
+>>>>>>> ce765399f3d2115cfbd3137bdf1c015bc310c867
 	for rows.Next(){
 		var columns string
 		var colDataType string
 		var numericScale string
 		rows.Scan(&columns,&colDataType,&numericScale)
+<<<<<<< HEAD
 		columns = strings.ToUpper(columns)
 		colDataType = strings.ToUpper(colDataType)
 		numericScale = strings.ToUpper(numericScale)
+=======
+>>>>>>> ce765399f3d2115cfbd3137bdf1c015bc310c867
 		if len(numericScale) == 0  {
 			numericScale = "9999999999"
 		}
@@ -92,6 +120,7 @@ func (con *Connection) SQLColumnsNum(strSql string,o *SummaryInfo) ([]byte,[]byt
 	return columnsList,columnsInfo
 }
 
+<<<<<<< HEAD
 func (m *Connection) SQLTableNum(strSql string,o *SummaryInfo) []byte { //获取库下表和列的信息
 	var tableList []byte
 	dbconn := m.GetConnection()
@@ -100,11 +129,26 @@ func (m *Connection) SQLTableNum(strSql string,o *SummaryInfo) []byte { //获取
 	rows, err := stmt.Query()
 	if err != nil {
 		fmt.Println("获取数据库%s的表信息失败！详细信息如下：%s", o.Database, err)
+=======
+func (m *Connection) SQLTableNum(o *SummaryInfo) ([]byte,bool) { //获取库下表和列的信息
+	var tableList []byte
+	var status bool = true
+
+	dbconn := m.GetConnection()
+	defer dbconn.Close()
+	//	strSql := "show tables from " + o.Database
+	stmt, err := dbconn.Prepare(o.StrSql)
+	rows, err := stmt.Query()
+	if err != nil {
+		fmt.Println("获取数据库%s的表信息失败！详细信息如下：%s", o.Database, err)
+		status = false
+>>>>>>> ce765399f3d2115cfbd3137bdf1c015bc310c867
 	}
 	for rows.Next() {
 		var tablename string
 		rows.Scan(&tablename)
 		tablename = strings.ToUpper(tablename)
+<<<<<<< HEAD
 		tableList = append(tableList, tablename...)
 		tableList = append(tableList, ";"...)
 	}
@@ -216,4 +260,32 @@ func (m *Connection) SqlExec(strSql string,o *SummaryInfo){   //执行目标端�
 		fmt.Printf("exec failed, err:%v\n", err)
 		os.Exit(1)
 	}
+=======
+		o.Tablename = tablename
+		columns, _ := m.SQLColumnsNum(o)
+
+		tableList = append(tableList, tablename...)
+		tableList = append(tableList, ":"...)
+		tableList = append(tableList, columns...)
+		tableList = append(tableList, ";"...)
+	}
+	return tableList, status
+}
+
+func (m *Connection) QueryMySQLTablePRIColumn(o *SummaryInfo) (string,bool){ //初始化数据库，获取当前库下每个表是否有int类型主键
+	// 获取当前主键信息
+	var status bool = true
+	var PRIcolumn string
+
+	dbconn := m.GetConnection()
+	defer dbconn.Close()
+
+	//strSql := "select COLUMN_NAME from INFORMATION_SCHEMA.COLUMNS where table_schema='" + o.Database + "' and table_name = '" + o.Tablename +"' and COLUMN_KEY='PRI' and COLUMN_TYPE like '%int%';"
+	stmt,err := dbconn.Prepare(o.StrSql)
+	err = stmt.QueryRow().Scan(&PRIcolumn)
+	if err != nil {
+		status = false
+	}
+	return PRIcolumn,status
+>>>>>>> ce765399f3d2115cfbd3137bdf1c015bc310c867
 }

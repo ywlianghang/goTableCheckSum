@@ -1,4 +1,5 @@
 package PublicFunc
+<<<<<<< HEAD
 
 import mgorm "goProject/mgorm/ExecQuerySQL"
 
@@ -17,3 +18,5 @@ func TypeSql(a map[string]*mgorm.Connection, m,o string) (string,string) {
 	}
 	return SstrSql,DstrSql
 }
+=======
+>>>>>>> ce765399f3d2115cfbd3137bdf1c015bc310c867
