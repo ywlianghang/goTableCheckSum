@@ -2,21 +2,20 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fe561d1d-878c-49b4-be63-c0a9272893c0" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/aa/main.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dispose/connInit.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dispose/getChunkValInfo.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dispose/getTableInfo.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dispose/tableInit.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/logs/log.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/PublicFunc/ConnectionDataType.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mgorm/ExecQuerySQL/QueryTableInfo.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CURD/DML.go" beforeDir="false" afterPath="$PROJECT_DIR$/checksum/DML.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CURD/conn.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/checksum/DML.go" beforeDir="false" afterPath="$PROJECT_DIR$/checksum/DML.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/checksum/chunkSum.go" beforeDir="false" afterPath="$PROJECT_DIR$/checksum/chunkSum.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dispose/sqlDispos.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dispose/tableDispos.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dispose/connInit.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dispose/getChunkValInfo.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dispose/getTableInfo.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dispose/tableInit.go" beforeDir="false" afterPath="$PROJECT_DIR$/dispose/tableInit.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/flag/flagHelp.go" beforeDir="false" afterPath="$PROJECT_DIR$/flag/flagHelp.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/logs/log.go" beforeDir="false" afterPath="$PROJECT_DIR$/logs/log.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main/main.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -56,36 +55,88 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="configurable..is.expanded" value="false" />
+    <property name="configurable..is.expanded" value="true" />
     <property name="configurable.GoLibrariesConfigurable.is.expanded" value="true" />
     <property name="go.import.settings.migrated" value="true" />
     <property name="go.sdk.automatically.set" value="true" />
     <property name="go.tried.to.enable.integration.vgo.integrator" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="settings.editor.selected.configurable" value="go.vgo" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/dispose" />
+    <property name="settings.editor.selected.configurable" value="go.sdk" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="D:\goProject\goTableCheckSum\checksum" />
+    <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\goProject\goTableCheckSum\dispose" />
-      <recent name="D:\goProject\goTableCheckSum\CURD" />
-      <recent name="D:\goProject\goTableCheckSum\tableActive" />
-      <recent name="D:\goProject\goTableCheckSum\tInit" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\goProject\goTableCheckSum\mgorm\ExecQuerySQL" />
+      <recent name="D:\goProject\goTableCheckSum\grorm\Oracle" />
+      <recent name="D:\goProject\goTableCheckSum\grorm" />
+      <recent name="D:\goProject\goTableCheckSum\aa" />
+      <recent name="D:\goProject\goTableCheckSum\ORM" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Go Build.go build main.go">
+    <configuration name="go build aa.go" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="goTableCheckSum" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="FILE" />
+      <filePath value="$PROJECT_DIR$/aa/aa.go" />
+      <package value="goProject" />
+      <directory value="$PROJECT_DIR$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="go build goProject/logs" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="goTableCheckSum" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="PACKAGE" />
+      <filePath value="$PROJECT_DIR$/logs/log.go" />
+      <package value="goProject/logs" />
+      <directory value="$PROJECT_DIR$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="go build log.go" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="goTableCheckSum" />
+      <working_directory value="$PROJECT_DIR$" />
+      <parameters value="go run main.go -s host=172.16.50.161,user=pcms,password=pcms@123,port=3306 -d host=172.16.50.162,user=pcms,password=pcms@123,port=3306 -D pcms -t gobench1" />
+      <kind value="FILE" />
+      <filePath value="$PROJECT_DIR$/logs/log.go" />
+      <package value="goProject" />
+      <directory value="$PROJECT_DIR$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="go build main.go (1)" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="goTableCheckSum" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="FILE" />
+      <filePath value="$PROJECT_DIR$/aa/main.go" />
+      <package value="goProject" />
+      <directory value="$PROJECT_DIR$" />
+      <method v="2" />
+    </configuration>
     <configuration name="go build main.go" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="goTableCheckSum" />
       <working_directory value="$PROJECT_DIR$" />
+      <parameters value="-s host=172.16.50.161,user=pcms,password=pcms@123,port=3306 -d host=172.16.50.162,user=pcms,password=pcms@123,port=3306 -D wlkycs -t test1 -datafix=file" />
       <kind value="FILE" />
       <filePath value="$PROJECT_DIR$/main/main.go" />
       <package value="goProject" />
       <directory value="$PROJECT_DIR$" />
       <method v="2" />
     </configuration>
+    <list>
+      <item itemvalue="Go Build.go build aa.go" />
+      <item itemvalue="Go Build.go build goProject/logs" />
+      <item itemvalue="Go Build.go build log.go" />
+      <item itemvalue="Go Build.go build main.go" />
+      <item itemvalue="Go Build.go build main.go (1)" />
+    </list>
     <recent_temporary>
       <list>
         <item itemvalue="Go Build.go build main.go" />
+        <item itemvalue="Go Build.go build log.go" />
+        <item itemvalue="Go Build.go build goProject/logs" />
+        <item itemvalue="Go Build.go build main.go (1)" />
+        <item itemvalue="Go Build.go build aa.go" />
       </list>
     </recent_temporary>
   </component>
@@ -107,5 +158,26 @@
   </component>
   <component name="VgoProject">
     <integration-enabled>true</integration-enabled>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/mgorm/MySQL/MqueryGetChunkVal.go</url>
+          <line>2</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://C:/Program Files/Go/src/io/io.go</url>
+          <line>14</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/checksum/chunkSum.go</url>
+          <line>89</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

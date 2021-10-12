@@ -41,17 +41,42 @@
 -----
 ## Usage  ##
 
+   假如需要校验oracle数据库，则需要下载oracle相应版本的驱动，例如：待校验的数据库为11-2则需要去下载11-2的驱动,并生效,否则连接Oracle会报错
+
+   安装Oracle Instant Client
+
+    从https://www.oracle.com/database/technologies/instant-client/downloads.html下载免费的Basic或Basic Light软件包。
+    # oracle basic client
+    instantclient-basic-linux.x64-11.2.0.4.0.zip
+    # oracle sqlplus
+    instantclient-sqlplus-linux.x64-11.2.0.4.0.zip
+    # oracle sdk
+    instantclient-sdk-linux.x64-11.2.0.4.0.zip
+
+   配置oracle client并生效
+
+    shell> unzip instantclient-basic-linux.x64-11.2.0.4.0.zip
+    shell> unzip instantclient-sqlplus-linux.x64-11.2.0.4.0.zip
+    shell> unzip instantclient-sdk-linux.x64-11.2.0.4.0.zip
+    shell> mv instantclient_11_2 /usr/local
+    shell> echo "export LD_LIBRARY_PATH=/usr/local/instantclient_11_2:$LD_LIBRARY_PATH" >>/etc/profile
+    shell> source /etc/profile
+
+   工具使用说明
+
     The source and destination specified by goTableCheckSum cannot be the same, and the data can only be checked offline
       NAME:
             goTableCheckSum - mysql table data verification
       USAGE:
             goTableCheckSum [global options] command [command options] [arguments...]
       VERSION:
-            1.0.1
+            2.1.1
+      AUTHOR:
+            lianghang <ywlianghang@gmail.com>
       COMMANDS:
             help, h  Shows a list of commands or help for one command
       GLOBAL OPTIONS:
-            --frameworkCode value, -f value     The type of the current validation schema. for example: MySQL(source) <-> MySQL(dest) is -f mm or -f=mm,Oracle(source) <-> MySQL(dest) is -f om or -f=om (default: "mm")
+            --frameworkCode value, -f value     The type of the current validation schema. for example: MySQL(source) <-> MySQL(dest) is -f mm or -f=mm,Oracle(source) <-> MySQL(dest) is -f om or -f=om, MySQL(source) <-> Oracle(dest) is -f mo or -f=mo (default: "mm")
             --OracleSid value, --osid value     The SID required to connect to Oracle. for example：SID is "helowin", -sid helowin or -sid=helowin (default: "NULL")
             --source value, -s value            Source side database connection information. For example: --source host=127.0.0.1,user=root,password=abc123,P=3306 (default:"NULL")
             --dest value, -d value              Target database connection information. For example: --dest host=127.0.0.1,user=root,password=abc123,P=3306 (default: "NULL")
@@ -131,6 +156,7 @@
      ** table GOBENCH2  check start **
      ** table GOBENCH2 check completed **
      ** check table GOBENCH2 time is 56.8436ms **
+     
 
      
 
@@ -153,7 +179,7 @@
     1）待检验表必须有数据，如果没有数据可以使用 --igt 参数忽略该表
     2）待检验表必须有主键
     3）待检验表主键索引必须是int类型，varchar类型暂不支持
-
+    4）MySQL必须开启lower_case_table_names=1
 -----
 ## Author ##
 

@@ -3,9 +3,10 @@ package checksum
 import (
 	"crypto/md5"
 	"crypto/sha1"
-	"database/sql"
 	"encoding/hex"
 	"fmt"
+	"goProject/flag"
+	mgorm "goProject/mgorm/ExecQuerySQL"
 	"hash/crc32"
 	"strings"
 )
@@ -59,6 +60,7 @@ func Arrcmp(src []string, dest []string) ([]string,[]string) {   //对比数据
 		msrc[v] = 0
 		mall[v] = 0
 	}
+
 	//2.源数组中，存不进去，即重复元素，所有存不进去的集合就是并集
 	for _, v := range src {
 		l := len(mall)
@@ -88,63 +90,71 @@ func Arrcmp(src []string, dest []string) ([]string,[]string) {   //对比数据
 func ColumnsValidation (sour,dest []byte) []string{   //校验表结构相同的表并返回
 	var aa []string
 	var bb []string
-	soura := strings.Split(strings.ToUpper(string(sour)),";")
-	soura = soura[:len(soura)-1]
-	desta := strings.Split(strings.ToUpper(string(dest)),";")
-	desta = desta[:len(desta)-1]
-	aa = soura
+	var soura,desta []string
+	if strings.Index(string(sour),";") != -1 {
+		soura = strings.Split(strings.ToUpper(string(sour)), ";")
+		soura = soura[:len(soura)-1]
+		aa = soura
+	}
+	if strings.Index(string(dest),";") != -1 {
+		desta = strings.Split(strings.ToUpper(string(dest)),";")
+		desta = desta[:len(desta)-1]
+	}
+
 	if CRC32(soura) != CRC32(desta) {
 		aa = Arrcmap(soura,desta)
 	}
+
 	if len(sour) !=0 {
 		for i := range aa {
-			bb = append(bb, strings.Split(aa[i], ":")[0])
+			bb = append(bb, strings.Split(aa[i], ";")[0])
 		}
 	}
 	return bb
 }
 
-func ChunkValidation (DB *sql.DB,dbname string,tablename string,column []string,sour,dest []byte,DataFix string,CheckSum string) {
-	soura := strings.Split(string(sour),",")
-	desta := strings.Split(string(dest),",")
 
+func ChunkValidation (a map[string]*mgorm.Connection,o *mgorm.SummaryInfo,p *flag.ConnParameter,sour,dest []byte) {
+	soura := strings.Split(string(sour),"&,")
+	desta := strings.Split(string(dest),"&,")
 	var aa,bb []string
-	if CheckSum == "CRC32" || CheckSum == "crc32"{
+	if p.CheckSum == "CRC32" || p.CheckSum == "crc32"{
 		if CRC32(soura) != CRC32(desta) {
 			aa,bb = Arrcmp(soura,desta)
 		}
-	}else if CheckSum == "MD5" || CheckSum == "md5"{
+	}else if p.CheckSum == "MD5" || p.CheckSum == "md5"{
 		if MD5(soura) != MD5(desta) {
 			aa,bb = Arrcmp(soura,desta)
 		}
-	}else if CheckSum == "SHA1" || CheckSum == "SHA1"{
+	}else if p.CheckSum == "SHA1" || p.CheckSum == "SHA1"{
 		if SHA1(soura) != SHA1(desta) {
 			aa,bb = Arrcmp(soura,desta)
 		}
 	}
-	//fmt.Println("bb")
-	//fmt.Println(bb)
+
 	if bb != nil{
-		sql := DestDelete(dbname,tablename,column,bb)
-		if DataFix =="file"{
-			fmt.Printf("Start the repair Delete SQL and write the repair SQL to /tmp/%s_%s.sql\n",dbname,tablename)
-			//fmt.Printf("Start the repair Delete SQL and write the repair SQL to C:\\%s_%s.sql\n",dbname,tablename)
-			SqlFile(dbname,tablename,sql)
-		}else if DataFix =="table"{
-			fmt.Printf("Start executing Delete SQL statements in the target databases %s\n",dbname)
-			SqlExec(DB,sql)
+		DeleteSql := DestDelete(a,o,bb)
+		if p.Datafix =="file"{
+			fmt.Printf("Start the repair Delete SQL and write the repair SQL to /tmp/%s_%s.sql\n",o.Database,o.Tablename)
+			//fmt.Printf("Start the repair Delete SQL and write the repair SQL to C:\\%s_%s.sql\n",o.Database,o.Tablename)
+			SqlFile(o.Database,o.Tablename,DeleteSql)
+		}else if p.Datafix =="table"{
+			fmt.Printf("Start executing Delete SQL statements in the target databases %s\n",o.Database)
+			a["dest"].SqlExec(DeleteSql,o)
 		}
 	}
 
 	if aa != nil {
-		sql := DestInsert(dbname,tablename,column,aa)
-		if DataFix =="file"{
-			fmt.Printf("Start the repair Insert SQL and write the repair SQL to /tmp/%s_%s.sql\n",dbname,tablename)
-			//fmt.Printf("Start the repair Insert SQL and write the repair SQL to C:\\%s_%s.sql\n",dbname,tablename)
-			SqlFile(dbname,tablename,sql)
-		}else if DataFix =="table"{
-			fmt.Printf("Start executing Insert SQL statements in the target databases %s\n",dbname)
-			SqlExec(DB,sql)
+		InsertSql := DestInsert(a,o,aa)
+		for _,sql := range InsertSql {
+			if p.Datafix == "file" {
+				fmt.Printf("Start the repair Insert SQL and write the repair SQL to /tmp/%s_%s.sql\n",o.Database,o.Tablename)
+				//fmt.Printf("Start the repair Insert SQL and write the repair SQL to C:\\%s_%s.sql\n", o.Database, o.Tablename)
+				SqlFile(o.Database, o.Tablename, sql)
+			} else if p.Datafix == "table" {
+				fmt.Printf("Start executing Insert SQL statements in the target databases %s\n", o.Database)
+				a["dest"].SqlExec(sql, o)
+			}
 		}
 	}
 

@@ -1,7 +1,6 @@
 package flag
 
 import (
-	"database/sql"
 	"fmt"
 	"github.com/urfave/cli"
 	"os"
@@ -11,11 +10,8 @@ import (
 type ConnParameter struct {
 	SourceConnection, DestConnection, Database, Charset, Datafix, ChunkSize, Tablename, IgnoreTable, CheckSum, Where, FrameworkCode, OracleSid string
 	Suser,Spassword,Shost,Sport,Duser,Dpassword,Dhost,Dport string
-	Dbdirct map[string]*sql.DB
-	SdatabaseType,DdatabaseType string
 	TableList []string
-	Sdb,Ddb *sql.DB
-	CheckTableStatus,HelpStatus bool
+	CheckTableStatus bool
 }
 
 func CliHelp(q *ConnParameter){
@@ -24,30 +20,30 @@ func CliHelp(q *ConnParameter){
 	app.Usage = "mysql Oracle table data verification" //应用功能说明
 	app.Author = "lianghang"                           //作者
 	app.Email = "ywlianghang@gmail.com"                //邮箱
-	app.Version = "1.1.1"                              //版本
+	app.Version = "2.1.1"                              //版本
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
 			Name: "frameworkCode,f", //命令名称
 			Usage: "The type of the current validation schema. for example: MySQL(source) <-> MySQL(dest) is -f mm or -f=mm," +
-				"Oracle(source) <-> MySQL(dest) is -f om or -f=om", //命令说明
+				"Oracle(source) <-> MySQL(dest) is -f om or -f=om, MySQL(source) <-> Oracle(dest) is -f mo or -f=mo", //命令说明
 			Value:       "mm",                                                                                  //默认值
 			Destination: &q.FrameworkCode,                                                                        //赋值
 		},
 		cli.StringFlag{
 			Name:        "OracleSid,osid",                                                                                      //命令名称
-			Usage:       "The SID required to connect to Oracle. for example：SID is \"helowin\", -sid helowin or -sid=helowin", //命令说明
+			Usage:       "The SID required to connect to Oracle. for example：SID is \"helowin\", -osid helowin or -osid=helowin", //命令说明
 			Value:       "NULL",                                                                                                //默认值
 			Destination: &q.OracleSid,                                                                                            //赋值
 		},
 		cli.StringFlag{
 			Name:        "source,s",                                                                                                           //命令名称
-			Usage:       "Source side database connection information. For example: --source host=127.0.0.1,user=root,password=abc123,P=3306", //命令说明
+			Usage:       "Source side database connection information. For example: --source host=127.0.0.1,user=root,password=abc123,port=3306", //命令说明
 			Value:       "NULL",                                                                                                               //默认值
 			Destination: &q.SourceConnection,                                                                                                    //赋值
 		},
 		cli.StringFlag{
 			Name:        "dest,d",                                                                                                      //命令名称
-			Usage:       "Target database connection information. For example: --dest host=127.0.0.1,user=root,password=abc123,P=3306", //命令说明
+			Usage:       "Target database connection information. For example: --dest host=127.0.0.1,user=root,password=abc123,port=3306", //命令说明
 			Value:       "NULL",                                                                                                        //默认值
 			Destination: &q.DestConnection,                                                                                               //赋值
 		},
@@ -104,27 +100,23 @@ func CliHelp(q *ConnParameter){
 	}
 	app.Run(os.Args)
 	q.CheckTableStatus = true
-	q.HelpStatus = true
+
 	aa := os.Args
-    for i:= range aa{
-    	if aa[i] == "--help" || aa[i] == "-h"{
-            q.HelpStatus = false
+	for i:= range aa {
+		if aa[i] == "--help" || aa[i] == "-h" {
+			os.Exit(1)
 		}
 	}
 
 }
+
 func ParameterLimits(q *ConnParameter) {
 	CliHelp(q)
-	if !q.HelpStatus {
-		return
-	}
-	q.Dbdirct = make(map[string]*sql.DB)
 	var parametersList string = "crc32,md5,sha1,table,file,mm,om,mo"
-	if strings.Index(parametersList,strings.ToLower(q.FrameworkCode)) == -1  {
-		fmt.Println("Incorrect frameworkCode input parameters, please use --help to see the relevant parameters")
-		q.HelpStatus = false
-		return
-	}
+		if strings.Index(parametersList,strings.ToLower(q.FrameworkCode)) == -1  {
+			fmt.Println("Incorrect frameworkCode input parameters, please use --help to see the relevant parameters")
+			os.Exit(1)
+		}
 
 	if q.SourceConnection  != "NULL" {
 		ab := strings.Split(q.SourceConnection, ",")
@@ -138,14 +130,13 @@ func ParameterLimits(q *ConnParameter) {
 			if strings.Index(ab[i],"password=") != -1{
 				q.Spassword = strings.Split(ab[i],"=")[1]
 			}
-			if strings.Index(ab[i],"P=") != -1{
+			if strings.Index(ab[i],"port=") != -1{
 				q.Sport = strings.Split(ab[i],"=")[1]
 			}
 		}
 	}else {
 		fmt.Println("Incorrect source database connection input parameters, please use --help to see the relevant parameters")
-		q.HelpStatus = false
-		return
+		os.Exit(1)
 	}
 
 	if q.DestConnection != "NULL" {
@@ -160,46 +151,40 @@ func ParameterLimits(q *ConnParameter) {
 			if strings.Index(ab[i],"password=") != -1{
 				q.Dpassword = strings.Split(ab[i],"=")[1]
 			}
-			if strings.Index(ab[i],"P=") != -1{
+			if strings.Index(ab[i],"port=") != -1{
 				q.Dport = strings.Split(ab[i],"=")[1]
 			}
 		}
 	}else{
 		fmt.Println("Incorrect dest database connection input parameters, please use --help to see the relevant parameters")
-		q.HelpStatus = false
-		return
+		os.Exit(1)
 	}
 	if q.Database == "NULL"{
 		fmt.Println("Incorrect database name input parameters, please use --help to see the relevant parameters")
-		q.HelpStatus = false
-		return
+		os.Exit(1)
 	}
+
 	if q.Shost == q.Dhost && q.Sport == q.Dport{
 		fmt.Println("Incorrect Same source end connection address (host and port) input parameters, please use --help to see the relevant parameters")
-		q.HelpStatus = false
-		return
+		os.Exit(1)
 	}
 	if strings.Index(parametersList,strings.ToLower(q.CheckSum)) == -1 {
 		fmt.Println("Incorrect CheckSum algorithm input parameters, please use --help to see the relevant parameters")
-		q.HelpStatus = false
-		return
+		os.Exit(1)
 	}
 	if strings.Index(parametersList,strings.ToLower(q.Datafix)) == -1  {
 		fmt.Println("Incorrect datafix input parameters, please use --help to see the relevant parameters")
-		q.HelpStatus = false
-		return
+		os.Exit(1)
 	}
 
 	//支持单表下使用where条件进行数据过滤校验
 	if q.Where != "NULL" { //限制使用where条件的表数量，默认支持单表，多表直接退出
 		if q.Tablename == "ALL"{
 			fmt.Printf("[error]: Use the WHERE function to specify more than just a single table\n")
-			q.HelpStatus = false
-			return
+            os.Exit(1)
 		}else if len(strings.Split(q.Tablename,",")) >1 {
 			fmt.Printf("[error]: Use the WHERE function to specify more than just a single table\n")
-			q.HelpStatus = false
-			return
+            os.Exit(1)
 		}
 	}
 }
