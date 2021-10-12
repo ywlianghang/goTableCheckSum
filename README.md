@@ -79,8 +79,8 @@
       GLOBAL OPTIONS:
             --frameworkCode value, -f value     The type of the current validation schema. for example: MySQL(source) <-> MySQL(dest) is -f mm or -f=mm,Oracle(source) <-> MySQL(dest) is -f om or -f=om, MySQL(source) <-> Oracle(dest) is -f mo or -f=mo (default: "mm")
             --OracleSid value, --osid value     The SID required to connect to Oracle. for example：SID is "helowin", -sid helowin or -sid=helowin (default: "NULL")
-            --source value, -s value            Source side database connection information. For example: --source host=127.0.0.1,user=root,password=abc123,P=3306 (default:"NULL")
-            --dest value, -d value              Target database connection information. For example: --dest host=127.0.0.1,user=root,password=abc123,P=3306 (default: "NULL")
+            --source value, -s value            Source side database connection information. For example: --source host=127.0.0.1,user=root,password=abc123,port=3306 (default:"NULL")
+            --dest value, -d value              Target database connection information. For example: --dest host=127.0.0.1,user=root,password=abc123,port=3306 (default: "NULL")
             --database value, -D value          checksum Database name. For example: -D pcms or -D=pcms (default: "NULL")
             --table value, -t value             checksum table name. For example: --table=a, or --table=a,b... (default: "ALL")
             --ignoreTable value, --igt value    Ignore a check for a table. For example: --igt=a or --igt=a,b... (default: "NULL")
@@ -98,8 +98,8 @@
 ## Examples ##
 
      1)检测单表数据是否相同，不同则产生修复SQL,默认将修复语句写入到/tmp/目录下，以库名_表名.sql为文件名
-     shell> ./goTableCheckSum -s host=172.16.50.161,user=pcms,password=pcms@123,P=3306 -d 
-     host=172.16.50.162,user=pcms,password=pcms@123,P=3306 -D pcms -t gobench1
+     shell> ./goTableCheckSum -s host=172.16.50.161,user=pcms,password=pcms@123,port=3306 -d 
+     host=172.16.50.162,user=pcms,password=pcms@123,port=3306 -D pcms -t gobench1
     
      -- database pcms  initialization completes,begin initialization table -- 
      -- Start initial database pcms table gobench1 -- 
@@ -114,8 +114,8 @@
      ** check table gobench1 time is 1.483941625s ** 
      
      2）检测单库pcms下所有表的数据是否相同，不同则产生修复SQL，并直接在目标库中执行
-     shell> ./goTableCheckSum -s host=172.16.50.161,user=pcms,password=pcms@123,P=3306 -d 
-     host=172.16.50.162,user=pcms,password=pcms@123,P=3306 -D pcms  -datafix table
+     shell> ./goTableCheckSum -s host=172.16.50.161,user=pcms,password=pcms@123,port=3306 -d 
+     host=172.16.50.162,user=pcms,password=pcms@123,port=3306 -D pcms  -datafix table
 
      -- database pcms  initialization completes,begin initialization table -- 
      -- Start initial database pcms table gobench1 -- 
@@ -130,8 +130,8 @@
      ** check table gobench1 time is 1.633451665s **
 
      3)检测单表下where条件的数据是否相同，不同则产生修复SQL，并在/tmp/目录下生成修复文件
-     shell> ./goTableCheckSum -s host=172.16.50.161,user=pcms,password=pcms@123,P=3306 -d 
-     host=172.16.50.162,user=pcms,password=pcms@123,P=3306 -D pcms -t gobench1 -datafix file 
+     shell> ./goTableCheckSum -s host=172.16.50.161,user=pcms,password=pcms@123,port=3306 -d 
+     host=172.16.50.162,user=pcms,password=pcms@123,port=3306 -D pcms -t gobench1 -datafix file 
      --where "id <=200000"
      
      -- database pcms  initialization completes,begin initialization table -- 
@@ -143,7 +143,7 @@
      ** check table gobench1 time is 1.836164054s ** 
     
      4）检测Oracle和MySQL异构下数据是否相同，不同则产生修复SQL，并在/tmp/目录下生成修复文件
-     shell> ./goTableCheckSum  -f om -osid helowin -s host=172.16.50.161,user=pcms,password=pcms,P=1521 -d host=172.16.50.161,user=pcms,password=pcms@123,P=3306 -D pcms
+     shell> ./goTableCheckSum  -f om -osid helowin -s host=172.16.50.161,user=pcms,password=pcms,port=1521 -d host=172.16.50.161,user=pcms,password=pcms@123,port=3306 -D pcms
      godror WARNING: discrepancy between DBTIMEZONE ("+00:00"=0) and SYSTIMESTAMP ("+08:00"=800) - set connection timezone, see https://github.com/godror/godror/blob/master/doc/timezone.md
      -- database pcms  initialization completes,begin initialization table --
      -- Start initial database pcms table GOBENCH1 --
